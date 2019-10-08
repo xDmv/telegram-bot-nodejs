@@ -1,29 +1,28 @@
 const TelegramBot = require('node-telegram-bot-api');
+const expo = require('./config');
 
-// replace the value below with the Telegram token you receive from @BotFather
-const token = 'YOUR_TELEGRAM_BOT_TOKEN';
+const token = expo.my_token;
+const admins = expo.admins_user;
 
-// Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, { polling: true });
 
-// Matches "/echo [whatever]"
-bot.onText(/\/echo (.+)/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
 
-  const chatId = msg.chat.id;
-  const resp = match[1]; // the captured "whatever"
 
-  // send back the matched "whatever" to the chat
-  bot.sendMessage(chatId, resp);
+bot.on('message', (msg) => {
+    const chatId = msg.chat.id;
+    const id = msg.from.id;
+    console.log('expo == ', JSON.stringify(expo.admins_user));
+    if ((id !== admins[0]) && (id !== admins[1]) && (id !== admins[2])) {
+        if (msg.text) {
+            if (JSON.stringify(msg.entities) !== undefined) {
+                bot.deleteMessage(chatId, msg.message_id);
+            }
+        } else {
+            bot.deleteMessage(chatId, msg.message_id);
+        }
+    }
 });
 
-// Listen for any kind of message. There are different kinds of
-// messages.
-bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-
-  // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Received your message');
+bot.on('polling_error', (error) => {
+    console.log(error.code); // => 'EFATAL'
 });
