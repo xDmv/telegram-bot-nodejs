@@ -1,0 +1,27 @@
+{
+  "name": "telegrambot",
+  "version": "1.0.0",
+  "description": "telegram bot with node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xDmv/telegram-bot-nodejs.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "node.js"
+  ],
+  "author": "Makushin Dima",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xDmv/telegram-bot-nodejs/issues"
+  },
+  "homepage": "https://github.com/xDmv/telegram-bot-nodejs#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}
