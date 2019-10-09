@@ -6,8 +6,6 @@ const admins = expo.admins_user;
 
 const bot = new TelegramBot(token, { polling: true });
 
-
-
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
     const id = msg.from.id;
@@ -18,10 +16,11 @@ bot.on('message', (msg) => {
             } else {
                 if (msg.reply_markup) {
                     bot.deleteMessage(chatId, msg.message_id);
-                } else {
-                    console.log(JSON.stringify(msg));
-                    console.log(JSON.stringify('msg.entities == ', msg.entities));
                 }
+                // else {
+                //     console.log(JSON.stringify(msg));
+                //     console.log(JSON.stringify('msg.entities == ', msg.entities));
+                // }
             }
         } else {
             bot.deleteMessage(chatId, msg.message_id);
