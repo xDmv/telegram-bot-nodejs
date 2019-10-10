@@ -29,40 +29,29 @@ sqlite.run(`CREATE TABLE IF NOT EXISTS log(
 
 // setting bot
 bot.onText(/\/setting/, (msg) => {
-    const chatId = msg.chat.id;
-    const id = msg.from.id;
-    let datetime = Date.now();
-    if (admins.indexOf(id) > 0) {
-        // const log = sqlite.run('SELECT * FROM log');
-        const start = sqlite.run('SELECT date FROM log WHERE `id` = 1');
-        let del_message = 0;
-        let error_massage = 0;
-        let all_message = 0;
-        let statistic = '';
-        // console.log('log: \n', JSON.stringify(log));
+    if (admins.indexOf(msg.from.id) > 0) {
+        let text = 'Список команд:\n' +
+            '/setting - вызов данного меню;\n' +
+            '/statistic - вся статистика за весь период работы;\n' +
+            '/unit_test - провести тестирование бота на работоспособность';
+        bot.sendMessage(msg.from.id, text);
+    }
+});
 
-        bot.sendMessage(id, 'Список команд:\n' +
-            '/setting - вызов данного меню\n' +
-            '/statistic all - вся статистика за весь период работы; \n' +
-            '/error message - узнать подробности об ошибках\n' +
-            '/del message - узнать подробности об удаленных сообщениях\n' +
-            '/unit-test - провести тестирование бота на работоспособность');
-        // all statistic:
-        // let static_all = [];
-        // log.forEach(function(element) {
-        //     static_all.push('`' + JSON.stringify(element) + '`');
-        // });
-        // bot.sendMessage(id, static_all.join(',\n '), { parse_mode: 'markdown' });
-        del_message = sqlite.run("SELECT count(*) as cont FROM log WHERE `type_log` == 'message'");
-        error_massage = sqlite.run("SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error'");
-        all_message = sqlite.run('SELECT COUNT(*) as cont FROM log');
-        console.log('date: ', moment(start[0].date).format('DD.MM.YYYY hh:mm:ss'));
-        console.log('del_message: ', del_message[0].cont);
-        statistic = 'Статистика c \'' + moment(start[0].date).format('DD.MM.YYYY hh:mm:ss') + '\' по \'' + moment(datetime).format('DD.MM.YYYY hh:mm:ss') +
+// statistic all
+bot.onText(/\/statistic/, (msg) => {
+    let datetime = Date.now();
+    if (admins.indexOf(msg.from.id) > 0) {
+        const start = sqlite.run('SELECT date FROM log WHERE `id` = 1');
+        let statistic = '';
+        let del_message = sqlite.run("SELECT count(*) as cont FROM log WHERE `type_log` == 'message'");
+        let error_massage = sqlite.run("SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error'");
+        let all_message = sqlite.run('SELECT COUNT(*) as cont FROM log');
+        statistic = 'Статистика c \'' + moment(start[0].date).format('DD.MM.YYYY HH:mm:ss') + '\' по \'' + moment(datetime).format('DD.MM.YYYY HH:mm:ss') +
             '\' \n удалено сообщений: ' + del_message[0].cont +
             '\n вызвано ошибок: ' + error_massage[0].cont +
             '\n всего сообщений в базе: ' + all_message[0].cont;
-        bot.sendMessage(id, statistic, { parse_mode: 'markdown' });
+        bot.sendMessage(msg.from.id, statistic, { parse_mode: 'markdown' });
     }
 });
 
@@ -93,7 +82,7 @@ bot.on('message', (msg) => {
                     bot.deleteMessage(chatId, msg.message_id);
                 } else {
                     console.log(JSON.stringify(msg));
-                    console.log(JSON.stringify('msg.entities == ', msg.entities));
+                    // console.log(JSON.stringify('msg.entities == ', msg.entities));
                 }
             }
         } else {
@@ -113,30 +102,50 @@ bot.on('message', (msg) => {
 });
 
 bot.on('polling_error', (error) => {
-    let datetime = Date.now();
-    sqlite.insert("log", {
-        id_user: id,
-        chat_id: chatId,
-        message_id: msg.message_id,
-        type: "error",
-        type_log: 'error',
-        message: JSON.stringify(msg),
-        error: JSON.stringify(error),
-        date: datetime
-    });
-    console.log(error.code); // => 'EFATAL'
+    console.log('+++');
+    // bot.on('message', (msg) => {
+    //     console.log('++++++++++++++++');
+    //     let datetime = Date.now();
+    //     sqlite.insert("log", {
+    //         id_user: msg.from.id,
+    //         chat_id: msg.chat.id,
+    //         message_id: msg.message_id,
+    //         type: "error",
+    //         type_log: 'error',
+    //         message: JSON.stringify(msg),
+    //         error: JSON.stringify(error),
+    //         date: datetime
+    //     });
+    //     console.log(error.code); // => 'EFATAL'
+    // });
+    console.log(error); // => 'EFATAL'
 });
+
 bot.on('webhook_error', (error) => {
-    let datetime = Date.now();
-    sqlite.insert("log", {
-        id_user: id,
-        chat_id: chatId,
-        message_id: msg.message_id,
-        type: "error",
-        type_log: 'error',
-        message: JSON.stringify(msg),
-        error: JSON.stringify(error),
-        date: datetime
+    console.log('/---/');
+    bot.on('message', (msg) => {
+        let datetime = Date.now();
+        sqlite.insert("log", {
+            id_user: msg.from.id,
+            chat_id: msg.chat.id,
+            message_id: msg.message_id,
+            type: "error",
+            type_log: 'error',
+            message: JSON.stringify(msg),
+            error: JSON.stringify(error),
+            date: datetime
+        });
+        console.log(error.code); // => 'EPARSE'
     });
-    console.log(error.code); // => 'EPARSE'
+    // sqlite.insert("log", {
+    //     id_user: msg.from.id,
+    //     chat_id: msg.chat.id,
+    //     message_id: msg.message_id,
+    //     type: "error",
+    //     type_log: 'error',
+    //     message: JSON.stringify(msg),
+    //     error: JSON.stringify(error),
+    //     date: datetime
+    // });
+    // console.log(error.code); // => 'EPARSE'
 });
