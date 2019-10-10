@@ -33,7 +33,9 @@ bot.onText(/\/setting/, (msg) => {
         let text = 'Список команд:\n' +
             '/setting - вызов данного меню;\n' +
             '/statistic - вся статистика за весь период работы;\n' +
-            '/unit_test - провести тестирование бота на работоспособность';
+            '/error - узнать подробности об ошибках;\n' +
+            '/del - узнать подробности об удаленных сообщениях;\n' +
+            '/unit_test - провести тестирование бота на работоспособность.';
         bot.sendMessage(msg.from.id, text);
     }
 });
@@ -55,6 +57,12 @@ bot.onText(/\/statistic/, (msg) => {
     }
 });
 
+bot.onText(/\/error/, (msg) => {
+    let error_massage = sqlite.run("SELECT * FROM log WHERE `type_log` == 'error'");
+    // console.log(JSON.stringify(error_massage));
+    bot.sendMessage(msg.from.id, statistic, { parse_mode: 'markdown' });
+});
+
 // filter message
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
@@ -65,6 +73,10 @@ bot.on('message', (msg) => {
         (id !== admins[1])
     ) {
         if (msg.text) {
+            if (msg.text == '/setting') {
+                bot.deleteMessage(chatId, msg.message_id);
+                return
+            }
             if (JSON.stringify(msg.entities) !== undefined) {
                 sqlite.insert("log", {
                     id_user: id,
@@ -82,7 +94,6 @@ bot.on('message', (msg) => {
                     bot.deleteMessage(chatId, msg.message_id);
                 } else {
                     console.log(JSON.stringify(msg));
-                    // console.log(JSON.stringify('msg.entities == ', msg.entities));
                 }
             }
         } else {
@@ -102,7 +113,23 @@ bot.on('message', (msg) => {
 });
 
 bot.on('polling_error', (error) => {
-    console.log('+++');
+    let datetime = Date.now();
+    console.log('++++');
+    console.log('chatId: ', message);
+    // sqlite.insert("log", {
+    //     id_user: msg.from.id,
+    //     chat_id: msg.chat.id,
+    //     message_id: msg.message_id,
+    //     type: "error",
+    //     type_log: 'error',
+    //     message: JSON.stringify(msg),
+    //     error: JSON.stringify(error),
+    //     date: datetime
+    // });
+    // bot.on('message', (msg) => {
+    //     console.log('msg', JSON.stringify(msg));
+
+    // });
     // bot.on('message', (msg) => {
     //     console.log('++++++++++++++++');
     //     let datetime = Date.now();
@@ -118,25 +145,11 @@ bot.on('polling_error', (error) => {
     //     });
     //     console.log(error.code); // => 'EFATAL'
     // });
-    console.log(error); // => 'EFATAL'
+    //console.log(error.code); // => 'EFATAL'
 });
 
 bot.on('webhook_error', (error) => {
     console.log('/---/');
-    bot.on('message', (msg) => {
-        let datetime = Date.now();
-        sqlite.insert("log", {
-            id_user: msg.from.id,
-            chat_id: msg.chat.id,
-            message_id: msg.message_id,
-            type: "error",
-            type_log: 'error',
-            message: JSON.stringify(msg),
-            error: JSON.stringify(error),
-            date: datetime
-        });
-        console.log(error.code); // => 'EPARSE'
-    });
     // sqlite.insert("log", {
     //     id_user: msg.from.id,
     //     chat_id: msg.chat.id,
@@ -147,5 +160,5 @@ bot.on('webhook_error', (error) => {
     //     error: JSON.stringify(error),
     //     date: datetime
     // });
-    // console.log(error.code); // => 'EPARSE'
+    console.log(error.code); // => 'EPARSE'
 });
