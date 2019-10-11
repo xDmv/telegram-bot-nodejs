@@ -73,7 +73,7 @@ bot.on('message', (msg) => {
         (id !== admins[1])
     ) {
         if (msg.text) {
-            if (msg.text == '/setting') {
+            if (msg.text === '/setting') {
                 bot.deleteMessage(chatId, msg.message_id);
                 return
             }
@@ -87,6 +87,10 @@ bot.on('message', (msg) => {
                     message: JSON.stringify(msg),
                     error: '',
                     date: datetime
+                }, function(res) {
+                    if (res.error)
+                        throw res.error;
+                    console.log(res);
                 });
                 bot.deleteMessage(chatId, msg.message_id);
             } else {
@@ -106,11 +110,17 @@ bot.on('message', (msg) => {
                 message: JSON.stringify(msg),
                 error: '',
                 date: datetime
+            }, function(res) {
+                if (res.error)
+                    throw res.error;
+                console.log(res);
             });
             bot.deleteMessage(chatId, msg.message_id);
         }
     }
 });
+
+sqlite.close();
 
 bot.on('polling_error', (error) => {
     let datetime = Date.now();
