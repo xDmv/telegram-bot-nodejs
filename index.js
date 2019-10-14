@@ -8,6 +8,11 @@ const admins = data.admins_user;
 
 const bot = new TelegramBot(token, { polling: true, filepath: false });
 
+if (!token) {
+    throw new Error('Bot token not provided');
+}
+
+
 // add sql-lite database
 const sqlite = require('sqlite-sync');
 
@@ -22,7 +27,7 @@ sqlite.run(`CREATE TABLE IF NOT EXISTS log(
     message TEXT,
     error TEXT,
     date INTEGER
-    );`, function(res) {
+    );`, function (res) {
     if (res.error)
         throw res.error;
 });
@@ -87,7 +92,7 @@ bot.on('message', (msg) => {
                     message: JSON.stringify(msg),
                     error: '',
                     date: datetime
-                }, function(res) {
+                }, function (res) {
                     if (res.error)
                         throw res.error;
                     console.log(res);
@@ -110,7 +115,7 @@ bot.on('message', (msg) => {
                 message: JSON.stringify(msg),
                 error: '',
                 date: datetime
-            }, function(res) {
+            }, function (res) {
                 if (res.error)
                     throw res.error;
                 console.log(res);
@@ -120,12 +125,11 @@ bot.on('message', (msg) => {
     }
 });
 
-sqlite.close();
 
 bot.on('polling_error', (error) => {
     let datetime = Date.now();
-    console.log('++++');
-    console.log('chatId: ', message);
+    // console.log('++++');
+    // console.log('chatId: ', message);
     // sqlite.insert("log", {
     //     id_user: msg.from.id,
     //     chat_id: msg.chat.id,
@@ -155,7 +159,7 @@ bot.on('polling_error', (error) => {
     //     });
     //     console.log(error.code); // => 'EFATAL'
     // });
-    //console.log(error.code); // => 'EFATAL'
+    console.log(error.code); // => 'EFATAL'
 });
 
 bot.on('webhook_error', (error) => {
@@ -172,3 +176,5 @@ bot.on('webhook_error', (error) => {
     // });
     console.log(error.code); // => 'EPARSE'
 });
+
+sqlite.close();
