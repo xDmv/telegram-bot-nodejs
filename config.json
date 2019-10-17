@@ -1,0 +1,4 @@
+{
+    "token": "Your token bot",
+    "admins_user": [] // example [123456789, 123456789]
+}
