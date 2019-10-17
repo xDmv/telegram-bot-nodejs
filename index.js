@@ -58,14 +58,20 @@ bot.onText(/\/statistic/, (msg) => {
             '\' \n удалено сообщений: ' + del_message[0].cont +
             '\n вызвано ошибок: ' + error_massage[0].cont +
             '\n всего сообщений в базе: ' + all_message[0].cont;
-        bot.sendMessage(msg.from.id, statistic, { parse_mode: 'markdown' });
+        bot.sendMessage(msg.from.id, statistic);
     }
+});
+
+bot.onText(/\/del/, (msg) => {
+    let del_massage = sqlite.run("SELECT * FROM log WHERE `type_log` == 'message'");
+    console.log(JSON.stringify(del_massage));
+    // bot.sendMessage(msg.from.id, 'del: ' + JSON.stringify(del_massage));
 });
 
 bot.onText(/\/error/, (msg) => {
     let error_massage = sqlite.run("SELECT * FROM log WHERE `type_log` == 'error'");
-    // console.log(JSON.stringify(error_massage));
-    bot.sendMessage(msg.from.id, statistic, { parse_mode: 'markdown' });
+    console.log(JSON.stringify(error_massage));
+    // bot.sendMessage(msg.from.id, 'error: ' + JSON.stringify(error_massage));
 });
 
 // filter message
@@ -92,10 +98,10 @@ bot.on('message', (msg) => {
                     message: JSON.stringify(msg),
                     error: '',
                     date: datetime
-                }, function (res) {
-                    if (res.error)
-                        throw res.error;
-                    console.log(res);
+                    // }, function (res) {
+                    //     if (res.error)
+                    //         throw res.error;
+                    //     console.log(res);
                 });
                 bot.deleteMessage(chatId, msg.message_id);
             } else {
@@ -128,7 +134,7 @@ bot.on('message', (msg) => {
 
 bot.on('polling_error', (error) => {
     let datetime = Date.now();
-    // console.log('++++');
+    console.log('|++++|');
     // console.log('chatId: ', message);
     // sqlite.insert("log", {
     //     id_user: msg.from.id,
@@ -159,7 +165,7 @@ bot.on('polling_error', (error) => {
     //     });
     //     console.log(error.code); // => 'EFATAL'
     // });
-    console.log(error.code); // => 'EFATAL'
+    console.log(error); // => 'EFATAL'
 });
 
 bot.on('webhook_error', (error) => {
@@ -176,5 +182,3 @@ bot.on('webhook_error', (error) => {
     // });
     console.log(error.code); // => 'EPARSE'
 });
-
-sqlite.close();
