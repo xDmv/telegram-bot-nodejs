@@ -134,7 +134,7 @@ bot.on('message', (msg) => {
                 if (msg.reply_markup) {
                     bot.deleteMessage(chatId, msg.message_id);
                 } else {
-                    console.log('JSON.stringify(msg)');
+                    console.log(JSON.stringify(msg));
                 }
             }
         } else {
@@ -160,8 +160,8 @@ bot.on('message', (msg) => {
 
 bot.on('polling_error', (error) => {
     let datetime = Date.now();
-    // console.log('|++++|');
-    console.log('chatId: ', message);
+    console.log('|++++|');
+    console.log('chatId: ', messages);
     sqlite.insert("log", {
         id_user: user_id,
         chat_id: chat_Id,
@@ -189,3 +189,5 @@ bot.on('webhook_error', (error) => {
     // });
     console.log(error.code); // => 'EPARSE'
 });
+
+// sqlite.close();
