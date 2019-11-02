@@ -45,12 +45,9 @@ bot.onText(/\/setting/, (msg) => {
     messages_id = msg.message_id;
     messages = msg;
     if (admins.indexOf(msg.from.id) >= 0) {
-        let text = 'Список команд:\n' +
-            '/setting - вызов данного меню;\n' +
-            '/statistic - вся статистика за весь период работы;\n' +
-            '/error - узнать подробности об ошибках;\n' +
-            '/del - узнать подробности об удаленных сообщениях;\n' +
-            '/unit_test - провести тестирование бота на работоспособность.';
+        let text = `Список команд: 
+            /setting - вызов данного меню;
+            /statistic - вся статистика за весь период работы;`;
         bot.sendMessage(msg.from.id, text);
     }
 });
