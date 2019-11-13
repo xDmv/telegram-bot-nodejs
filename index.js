@@ -3,13 +3,13 @@ var moment = require('moment');
 const data = require('./config.json');
 
 // data for work bot
-const token = data.token;
-const admins = data.admins_user;
-const commands = data.commands;
+const Token = data.token;
+const Admins = data.admins_user;
+const Commands = data.commands;
 
-const bot = new TelegramBot(token, { polling: true, filepath: false });
+const bot = new TelegramBot(Token, { polling: true, filepath: false });
 
-if (!token) {
+if (!Token) {
 	throw new Error('Bot token not provided');
 }
 
@@ -90,7 +90,8 @@ let statisticOptions = {
 					callback_data: 'termine'
 				}
 			]
-		]})
+		]
+	})
 }
 
 let errorOptions = {
@@ -114,7 +115,8 @@ let errorOptions = {
 					callback_data: '7day_error'
 				}
 			]
-		]})
+		]
+	})
 }
 
 // setting bot
@@ -123,7 +125,7 @@ bot.onText(/\/setting/, (msg) => {
 	chat_Id = msg.chat.id;
 	messages_id = msg.message_id;
 	messages = msg;
-	if (admins.indexOf(msg.from.id) >= 0) {
+	if (Admins.indexOf(msg.from.id) >= 0) {
 		let text = `/setting - вызов данного меню;`;
 		bot.sendMessage(msg.from.id, text, messageOptions, {parse_mode: 'markdown'});
 	}
@@ -225,12 +227,9 @@ bot.on('message', (msg) => {
 	const chatId = msg.chat.id;
 	const id = msg.from.id;
 	let datetime = Date.now();
-	if (
-		(id !== admins[0]) &&
-		(id !== admins[1])
-	) {
+	if (Admins.indexOf(msg.from.id) >= 0) {
 		if (msg.text) {
-			if (commands.indexOf(msg.text) >= 0) {
+			if (Commands.indexOf(msg.text) >= 0) {
 				bot.deleteMessage(chatId, msg.message_id);
 				return
 			}
