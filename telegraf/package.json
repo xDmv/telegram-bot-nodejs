@@ -1,0 +1,25 @@
+{
+  "name": "test_node_telegram_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test bot"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "bot",
+    "tester"
+  ],
+  "author": "Dima Makushin",
+  "license": "MIT",
+  "dependencies": {
+    "@types/rc": "^1.1.0",
+    "rc": "^1.2.8",
+    "telegraf": "^3.33.3"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.2"
+  }
+}
