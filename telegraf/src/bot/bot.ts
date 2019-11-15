@@ -207,7 +207,7 @@ bot.on('callback_query', (ctx) => {
 
 });
 
-bot.on(['sticker', 'photo', 'document'], (ctx) => {
+bot.on(['sticker', 'photo', 'document', 'contact', 'location', 'audio'], (ctx) => {
 	let message : any ;
 	let datetime = Date.now();
 	message = ctx.message;
