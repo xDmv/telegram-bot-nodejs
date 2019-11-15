@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test bot",
+    "test": "jest",
     "start": "node ./dist/bot/bot.js",
     "build": "gulp",
     "dev": "gulp dev"
@@ -30,6 +30,7 @@
     "gulp-nodemon": "^2.4.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-typescript": "^5.0.1",
+    "jest": "^24.9.0",
     "typescript": "^3.7.2"
   }
 }

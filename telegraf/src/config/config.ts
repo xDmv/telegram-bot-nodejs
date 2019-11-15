@@ -7,10 +7,9 @@ export type ConfigT = {
 }
 export type AdminsT = {
 	admin_users: {
-		id_users: [ number ]
+		id_users: number
 	}
 }
-
 
 export function getConfig(name: string): ConfigT {
 	const config = rc(name);

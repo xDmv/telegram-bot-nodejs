@@ -234,7 +234,6 @@ bot.on('message', (ctx) => {
 	const chatId = message.chat.id;
 	const id = message.from.id;
 	let type_message: string = message.entities;
-	// console.log('messages: ', message);
 	if(type_message === undefined 
 		&& message.reply_markup === undefined){
 		return console.log("OK, this text!");
