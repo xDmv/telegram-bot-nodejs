@@ -1,10 +1,5 @@
 const sqlite = require('sqlite-sync');
 
-// export function createTlgfBot(config: BotConfigT): TelegrafBotT {
-// 	const bot = new Telegraf(config.bot_token);
-// 	return bot
-//   }
-
 export function initializeDB() {
 	sqlite.connect('statistic.db');
 	sqlite.run(`CREATE TABLE IF NOT EXISTS log(
@@ -19,7 +14,7 @@ export function initializeDB() {
 		date INTEGER
 		);`
 	);
-	// console.log('initializeDB!');
+
 }
 
 export function setDB(
