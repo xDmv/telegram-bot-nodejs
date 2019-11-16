@@ -57,6 +57,7 @@ typings/
 # dotenv environment variables file
 .env
 .eat_test_rc
+.admin_data_rc
 
 # next.js build output
 .next
