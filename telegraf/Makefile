@@ -17,7 +17,7 @@ help:
 	@echo '$(YELLOW)development$(RESET):'
 	@echo '  $(GREEN)watch   $(RESET) - clear, build and watch bot.ts'
 	@echo '  $(GREEN)build   $(RESET) - builds new bot'
-	@echo '  $(GREEN)clear   $(RED) - clear old code'
+	@echo '  $(GREEN)clear   $(RED) - очистка папки созданного кода'
 	@echo '  $(GREEN)start   $(RESET) - start bot, not watch'
 
 
