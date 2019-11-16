@@ -1,26 +1,27 @@
 import Telegraf from 'telegraf';
 import { getConfig } from '../config/config';
-import { getAdmin } from '../config/config';
+import { getAdmin } from '../config';
+import { initializeDB, getDB, setDB } from '../db';
 
 const config = getConfig('eat_test_');
+const users_Admin = getAdmin('admin_data_').admin_users.id_users; 
+const admins_user : any = users_Admin;
+
 const Token = config.bot_section.bot_token;
 const bot = new Telegraf(Token);
-const sqlite = require('sqlite-sync');
 const moment = require('moment');
 
-sqlite.connect('statistic.db');
-sqlite.run(`CREATE TABLE IF NOT EXISTS log(
-	id INTEGER PRIMARY KEY AUTOINCREMENT, 
-	id_user INTEGER,
-	chat_id INTEGER,
-	message_id INTEGER,
-	type TEXT,
-	type_log TEXT,
-	message TEXT,
-	error TEXT,
-	date INTEGER
-	);`
-);
+const db = initializeDB();
+db;
+
+export function Admins(){
+	let temp = admins_user.split(', ');
+	let Admins = [];
+	for(let i = 0; i < temp.length; i++ ){
+		Admins.push(Number(temp[i]));
+	}
+	return Admins;
+}
 
 const messageOptions = {
 	"reply_markup": {
@@ -98,23 +99,16 @@ const errorOptions = {
 bot.command('setting', (ctx) => {
 	let messages : any;
 	messages = ctx.message;
-	let user_id : number = messages.from.id;
-	let admins_user : any = getAdmin('eat_test_').admin_users.id_users;
-	let Admins = [];
-	let temp = admins_user.split(', ');
-	for(let i = 0; i < temp.length; i++ ){
-		Admins.push(Number(temp[i]));
-	}
-	if (Admins.indexOf(user_id) >= 0) {
+	if (Admins().indexOf(messages.from.id) >= 0) {
 		ctx.deleteMessage();
 		let text = `/setting - вызов данного меню;`;
-		bot.telegram.sendMessage(user_id, text, messageOptions );
+		bot.telegram.sendMessage(messages.from.id, text, messageOptions );
 	}
 });
 
 bot.on('callback_query', (ctx) => {
 	let update: any = ctx.update;
-	// console.log('temp: ', ctx.);
+	// console.log('temp: ', ctx.from.id);
 	let user_id : any;
 	let callback_query_data = update.callback_query.data;
 	// console.log(callback_query_data);
@@ -125,11 +119,19 @@ bot.on('callback_query', (ctx) => {
 
 	function Statistic (time : number, iterval: string) {
 		let sql = "SELECT count(*) as cont FROM log WHERE `type_log` == 'message' and `date` >= " + time; 
-		let del_message = sqlite.run(sql);
+		let del_message = getDB(sql);
+		if(del_message === 'error'){
+			return ctx.reply('На данный момент в базе нет записей');
+		}
 		sql = "SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error' and `date` >= " + time;
-		let error_massage = sqlite.run(sql);
+		let error_massage = getDB(sql);
 		sql = "SELECT COUNT(*) as cont FROM log WHERE `date` >= " + time;
-		let all_message = sqlite.run(sql);
+		let all_message = getDB(sql);
+		if (del_message.length === 0 &&
+			error_massage.length === 0 &&
+			all_message.length === 0) {
+			ctx.reply(`Нет записей за последние ${iterval}`);
+		}
 		statistic = `
 		Статистика за последние ${iterval}:
 				удалено сообщений: ${del_message[0].cont};
@@ -140,7 +142,10 @@ bot.on('callback_query', (ctx) => {
 
 	function ErrorTime (time: number, iterval:string) {
 		let sql = "SELECT type, message, error, date FROM log WHERE `type_log` == 'error' and `date` >= " + time; 
-		let error_array = sqlite.run(sql);
+		let error_array = getDB(sql);
+		if(error_array === 'error'){
+			return ctx.reply('На данный момент в базе нет записей');
+		}
 		if(error_array.length === 0) {
 			ctx.reply(`Нет записей за последние ${iterval}`);
 		}
@@ -155,10 +160,13 @@ bot.on('callback_query', (ctx) => {
 	};
 
 	if(callback_query_data === 'statistic_all'){
-		const start = sqlite.run('SELECT date FROM log WHERE `id` = 1');
-		let del_message = sqlite.run("SELECT count(*) as cont FROM log WHERE `type_log` == 'message'");
-		let error_massage = sqlite.run("SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error'");
-		let all_message = sqlite.run('SELECT COUNT(*) as cont FROM log');
+		const start = getDB('SELECT date FROM log WHERE `id` = 1');
+		if(start === 'error'){
+			return ctx.reply('На данный момент в базе нет записей');
+		}
+		let del_message = getDB("SELECT count(*) as cont FROM log WHERE `type_log` == 'message'");
+		let error_massage = getDB("SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error'");
+		let all_message = getDB('SELECT COUNT(*) as cont FROM log');
 		statistic = `
 Статистика c '${moment(start[0].date).format('DD.MM.YYYY HH:mm:ss')}' по '${moment(datetime).format('DD.MM.YYYY HH:mm:ss')}'
 		удалено сообщений: ${del_message[0].cont};
@@ -208,22 +216,20 @@ bot.on('callback_query', (ctx) => {
 });
 
 bot.on(['sticker', 'photo', 'document', 'contact', 'location', 'audio'], (ctx) => {
-	let message : any ;
+	let message : any = ctx.message;
 	let datetime = Date.now();
-	message = ctx.message;
-	const chatId = message.chat.id;
-	const id = message.from.id;
 
-	sqlite.insert("log", {
-		id_user: id,
-		chat_id: chatId,
-		message_id: message.message_id,
-		type: "del message not type 'text'",
-		type_log: 'message',
-		message: JSON.stringify(message),
-		error: '',
-		date: datetime
-	});
+	setDB(
+		"log",
+		message.from.id,
+		message.chat.id,
+		message.message_id,
+		"del message not type 'text'",
+		'message',
+		JSON.stringify(message),
+		'',
+		datetime
+	);
 	return ctx.deleteMessage();
 })
 
@@ -237,18 +243,18 @@ bot.on('message', (ctx) => {
 	if(type_message === undefined 
 		&& message.reply_markup === undefined){
 		return console.log("OK, this text!");
-		// return ctx.reply('OK, this text!');
 	}
-	sqlite.insert("log", {
-		id_user: id,
-		chat_id: chatId,
-		message_id: message.message_id,
-		type: "del message not type 'text'",
-		type_log: 'message',
-		message: JSON.stringify(message),
-		error: '',
-		date: datetime
-	});
+	setDB(
+		"log",
+		message.from.id,
+		message.chat.id,
+		message.message_id,
+		"del message not type 'text'",
+		'message',
+		JSON.stringify(message),
+		'',
+		datetime
+	);
 	console.log('delete message');
 	ctx.deleteMessage();
 });
