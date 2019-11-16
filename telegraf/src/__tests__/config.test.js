@@ -1,6 +1,6 @@
 const conf = require('../../dist/config/config');
 
-test('Test config', () => {
+test('Test Token', () => {
 	const confg = conf.getConfig('eat_test_');
 	expect(confg).toBeDefined();
 	expect(confg).toHaveProperty('bot_section', expect.any(Object));
@@ -8,8 +8,8 @@ test('Test config', () => {
 	expect(bot_section).toHaveProperty('bot_token', expect.any(String));
 })
 
-test('Test config Admin', () => {
-	const confg = conf.getAdmin('eat_test_');
+test('Test user Admins', () => {
+	const confg = conf.getAdmin('admin_data_');
 	expect(confg).toBeDefined();
 	expect(confg).toHaveProperty('admin_users', expect.any(Object));
 	const {admin_users} = confg;
