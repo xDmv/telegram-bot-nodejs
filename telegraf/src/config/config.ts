@@ -19,7 +19,7 @@ export function getConfig(name: string): ConfigT {
 	return <ConfigT>config;
 }
 
-export function ConvertAdmins (obj: object) {
+export function parserAdmins (obj: object) {
 	const users_Admin = <AdminsT>obj; 
 	const adminsuser : any = users_Admin.admin_users.id_users;
 	let temp = adminsuser.split(', ');
@@ -36,5 +36,5 @@ export function getAdmin(name: string) {
 		throw new Error(`Config by name ${name} not found`);
 	}
 
-	return ConvertAdmins (config);
+	return parserAdmins (config);
 }

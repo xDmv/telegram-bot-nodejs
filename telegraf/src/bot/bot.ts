@@ -2,9 +2,11 @@ import Telegraf from 'telegraf';
 import { getConfig } from '../config/config';
 import { getAdmin } from '../config';
 import { initializeDB, getDB, setDB } from '../db';
+import { messageOptions, statisticOptions, errorOptions } from './optionsButton';
 
 const config = getConfig('eat_test_');
 const Admins = getAdmin('admin_data_'); 
+
 
 
 const Token = config.bot_section.bot_token;
@@ -14,77 +16,7 @@ const moment = require('moment');
 const db = initializeDB();
 db;
 
-const messageOptions = {
-	"reply_markup": {
-		"inline_keyboard": [
-			[
-				{
-					text: 'Общая статистика',
-					callback_data: 'statistic_all'
-				},
-				{
-					text: 'Указать интервал',
-					callback_data: 'statistic_date'
-				}
-			],
-			[
-				{
-					text: 'Посмотреть ошибки',
-					callback_data: 'error_all'
-				}
-			]
-		]
-	}
-}
 
-const statisticOptions = {
-	"reply_markup": {
-		"inline_keyboard": [
-			[
-				{
-					text: 'Последние 24 часа',
-					callback_data: '24'
-				}
-			],
-			[
-				{
-					text: 'Последние 2 дня',
-					callback_data: '2 days'
-				}
-			],
-			[
-				{
-					text: 'Последние 7 дней',
-					callback_data: '7 days'
-				}
-			]
-		]
-	}
-}
-
-const errorOptions = {
-	"reply_markup": {
-		"inline_keyboard":
-		[
-			[
-				{
-					text: 'Последние 24 часа',
-					callback_data: '24_error'
-				}
-			],[
-				{
-					text: 'Последние 2 дня',
-					callback_data: '2day_error'
-				}
-			],[
-				{
-					text: 'Последние 7 дней',
-					callback_data: '7day_error'
-				}
-			]
-		]
-	}
-}
 
 // setting bot
 bot.command('setting', (ctx) => {
