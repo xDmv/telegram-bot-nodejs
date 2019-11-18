@@ -4,8 +4,8 @@ import { getAdmin } from '../config';
 import { initializeDB, getDB, setDB } from '../db';
 
 const config = getConfig('eat_test_');
-const users_Admin = getAdmin('admin_data_').admin_users.id_users; 
-const admins_user : any = users_Admin;
+const Admins = getAdmin('admin_data_'); 
+
 
 const Token = config.bot_section.bot_token;
 const bot = new Telegraf(Token);
@@ -13,15 +13,6 @@ const moment = require('moment');
 
 const db = initializeDB();
 db;
-
-export function Admins(){
-	let temp = admins_user.split(', ');
-	let Admins = [];
-	for(let i = 0; i < temp.length; i++ ){
-		Admins.push(Number(temp[i]));
-	}
-	return Admins;
-}
 
 const messageOptions = {
 	"reply_markup": {
@@ -99,7 +90,7 @@ const errorOptions = {
 bot.command('setting', (ctx) => {
 	let messages : any;
 	messages = ctx.message;
-	if (Admins().indexOf(messages.from.id) >= 0) {
+	if (Admins.indexOf(messages.from.id) >= 0) {
 		ctx.deleteMessage();
 		let text = `/setting - вызов данного меню;`;
 		bot.telegram.sendMessage(messages.from.id, text, messageOptions );

@@ -15,11 +15,18 @@ help:
 	@echo '$(YELLOW)build$(RESET):'
 	@echo '  $(GREEN)build   $(RESET) - build environment: dev'
 	@echo '$(YELLOW)development$(RESET):'
+	@echo '  $(GREEN)test   $(RESET) - unit-test code'
 	@echo '  $(GREEN)watch   $(RESET) - clear, build and watch bot.ts'
 	@echo '  $(GREEN)build   $(RESET) - builds new bot'
 	@echo '  $(GREEN)clear   $(RED) - очистка папки созданного кода'
 	@echo '  $(GREEN)start   $(RESET) - start bot, not watch'
 
+dev-test: build test
+
+test:
+ifndef Dev
+	@npm run test
+endif
 
 watch: 
 ifndef Dev

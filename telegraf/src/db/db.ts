@@ -15,6 +15,7 @@ export function initializeDB() {
 		);`
 	);
 
+	return (typeof(sqlite.connect('statistic.db')));
 }
 
 export function setDB(
@@ -35,7 +36,7 @@ export function setDB(
 			type: type,
 			type_log: type_log,
 			message: messages,
-			error: '',
+			error: error,
 			date: datetime
 		});
 	
