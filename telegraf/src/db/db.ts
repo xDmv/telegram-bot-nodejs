@@ -1,6 +1,6 @@
-const sqlite = require('sqlite-sync');
+export const sqlite = require('sqlite-sync');
 
-export function initializeDB() {
+export async function initializeDB() {
 	sqlite.connect('statistic.db');
 	sqlite.run(`CREATE TABLE IF NOT EXISTS log(
 		id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -47,11 +47,15 @@ export function getDB(sql: string) {
 	let proverka = sqlite.run(
 		'SELECT * FROM log;'
 	);
+	if(Object.keys(proverka).length === 0){
+		return 'error';
+	}
 	if(Object.keys(proverka).length !== 0){
 		let rezult = sqlite.run(sql);
 		return rezult;
 	}
-	if(Object.keys(proverka).length === 0){
-		return 'error';
-	}
+}
+
+export async function stopDB () {
+	sqlite.close();
 }

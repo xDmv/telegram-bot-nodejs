@@ -1,14 +1,19 @@
 import rc from 'rc';
 
 export type ConfigT = {
-	bot_section: {
-		bot_token: string
-	}
+	bot_section: BotConfigT
 }
+
+export type BotConfigT = {
+	bot_token: string
+}
+
 export type AdminsT = {
-	admin_users: {
-		id_users: number
-	}
+	admin_users: AdminsUserT
+}
+
+export type AdminsUserT = {
+	id_users: string
 }
 
 export function getConfig(name: string): ConfigT {
@@ -35,6 +40,5 @@ export function getAdmin(name: string) {
 	if(!config){
 		throw new Error(`Config by name ${name} not found`);
 	}
-
 	return parserAdmins (config);
 }
