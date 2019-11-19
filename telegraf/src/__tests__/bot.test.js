@@ -1,13 +1,17 @@
-const bot = require('../../dist/bot');
+const testbot = require('../../dist/bot');
 const conf = require('../../dist/config');
 
 describe('Unit test Bot', () => {
 
-	test('testing createBot', () => {
+	beforeAll(async () => {
+		config = conf.createTestConfig();
+		tlgfBot = testbot.initializeTlgfBot(conf.bot_section);
+		await initializeTlgfBot(tlgfBot);
+	})
 
-		//const newBot = bot.createBot();
-		// console.log('newBot ---',newBot);
-		expect(true).toBe(true);
+	test('testing createBot', () => {
+		expect(tlgfBot).toBeDefined();
+		expect(tlgfBot).toHaveProperty('launch', expect.any(Function));
 	});
 
 })

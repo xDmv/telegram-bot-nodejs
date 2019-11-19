@@ -42,3 +42,8 @@ export function getAdmin(name: string) {
 	}
 	return parserAdmins (config);
 }
+
+export function createTestConfig(): ConfigT {
+	const config = getConfig('eat_test_');
+	return config
+}

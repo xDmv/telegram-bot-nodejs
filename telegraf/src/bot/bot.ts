@@ -40,6 +40,7 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 			sql = "SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error' and `date` >= " + time;
 			let error_massage = getDB(sql);
 			sql = "SELECT COUNT(*) as cont FROM log WHERE `date` >= " + time;
+			let unit_test = getDB("SELECT COUNT(*) as cont FROM log WHERE `type` == 'test' and `date` >= " + time);
 			let all_message = getDB(sql);
 			if (del_message.length === 0 &&
 				error_massage.length === 0 &&
@@ -50,6 +51,7 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 			Статистика за последние ${iterval}:
 					удалено сообщений: ${del_message[0].cont};
 					вызвано ошибок: ${error_massage[0].cont};
+					unit-test сообщения: ${unit_test[0].cont};
 					всего сообщений в базе: ${all_message[0].cont};`;
 			ctx.reply(statistic);
 		};
@@ -80,11 +82,13 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 			}
 			let del_message = getDB("SELECT count(*) as cont FROM log WHERE `type_log` == 'message'");
 			let error_massage = getDB("SELECT COUNT(*) as cont FROM log WHERE `type_log` == 'error'");
+			let unit_test = getDB("SELECT COUNT(*) as cont FROM log WHERE `type` == 'test'");
 			let all_message = getDB('SELECT COUNT(*) as cont FROM log');
 			statistic = `
 	Статистика c '${moment(start[0].date).format('DD.MM.YYYY HH:mm:ss')}' по '${moment(datetime).format('DD.MM.YYYY HH:mm:ss')}'
 			удалено сообщений: ${del_message[0].cont};
 			вызвано ошибок: ${error_massage[0].cont};
+			unit-test сообщения: ${unit_test[0].cont};
 			всего сообщений в базе: ${all_message[0].cont};`;
 			ctx.reply(statistic);
 		}
@@ -158,7 +162,6 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 		}
 		if(message.entities === undefined 
 			&& message.reply_markup === undefined){
-			// console.log('message: \n',message);
 			return console.log("OK, this text!");
 		}
 		setDB(
@@ -172,11 +175,10 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 			'',
 			datetime
 		);
-		console.log('delete message');
 		ctx.deleteMessage();
 	});
 	
-	(<any>Bot).launch()
+	return (<any>Bot).launch()
 		.then(() => {
 			console.log('Bot started work');
 		}
