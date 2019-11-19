@@ -1,29 +1,36 @@
 {
-  "name": "telegrambot",
-  "version": "1.0.0",
-  "description": "telegram bot with node.js",
+  "name": "test_node_telegram_bot",
+  "version": "2.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xDmv/telegram-bot-nodejs.git"
+    "test": "jest",
+    "start": "node ./dist/app.js",
+    "build": "gulp",
+    "dev": "gulp dev"
   },
   "keywords": [
-    "bot",
     "telegram",
-    "node.js"
+    "bot",
+    "bot",
+    "tester"
   ],
-  "author": "Makushin Dima",
+  "author": "Dima Makushin",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/xDmv/telegram-bot-nodejs/issues"
-  },
-  "homepage": "https://github.com/xDmv/telegram-bot-nodejs#readme",
   "dependencies": {
     "moment": "^2.24.0",
-    "node-telegram-bot-api": "^0.30.0",
-    "sqlite-sync": "^0.3.9"
+    "rc": "^1.2.8",
+    "sqlite-sync": "^0.3.9",
+    "telegraf": "^3.33.3"
+  },
+  "devDependencies": {
+    "@types/rc": "^1.1.0",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-nodemon": "^2.4.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
+    "jest": "^24.9.0",
+    "typescript": "^3.7.2"
   }
 }
