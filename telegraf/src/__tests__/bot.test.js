@@ -6,7 +6,6 @@ describe('Unit test Bot', () => {
 	beforeAll(async () => {
 		config = conf.createTestConfig();
 		tlgfBot = testbot.createBot(config.bot_section);
-		// await initializeTlgfBot(tlgfBot);
 	})
 
 	test('testing createBot', () => {
