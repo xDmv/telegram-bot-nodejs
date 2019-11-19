@@ -178,7 +178,7 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 		ctx.deleteMessage();
 	});
 	
-	return (<any>Bot).launch()
+	(<any>Bot).launch()
 		.then(() => {
 			console.log('Bot started work');
 		}
