@@ -14,8 +14,7 @@ export async function initializeDB() {
 		date INTEGER
 		);`
 	);
-	// console.log('sql: --', typeof(sqlite.connect('statistic.db')));
-	return (typeof(sqlite.connect('statistic.db')));
+	return (sqlite.connect('statistic.db'));
 }
 
 export function setDB(
@@ -30,16 +29,15 @@ export function setDB(
 	datetime: number) {
 
 	const rezult =	sqlite.insert(db_name, {
-			id_user: id,
-			chat_id: chatId,
-			message_id: message_id,
-			type: type,
-			type_log: type_log,
-			message: messages,
-			error: error,
-			date: datetime
-		});
-	
+		id_user: id,
+		chat_id: chatId,
+		message_id: message_id,
+		type: type,
+		type_log: type_log,
+		message: messages,
+		error: error,
+		date: datetime
+	});
 	return (rezult);
 }
 

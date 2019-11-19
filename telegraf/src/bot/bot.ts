@@ -26,10 +26,7 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 	});
 	Bot.on('callback_query', (ctx) => {
 		let update: any = ctx.update;
-		// console.log('temp: ', ctx.from.id);
 		let callback_query_data = update.callback_query.data;
-		// console.log(callback_query_data);
-		// ctx.reply('txt mesage!');
 	
 		let datetime = Date.now();
 		let statistic = '';
