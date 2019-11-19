@@ -1,3 +1,4 @@
+const rc = require('rc');
 const conf = require('../../dist/config');
 
 test('Test Token', () => {
@@ -13,3 +14,11 @@ test('Test user Admins', () => {
 	expect(confg).toBeDefined();
 	expect(typeof(confg)).toBe('object');
 });
+
+test('Testing parserAdmins', () => {
+	const name = 'admin_data_';
+	const config = rc(name)
+	const usersAdmin = conf.parserAdmins(config);
+	expect(usersAdmin).toBeDefined();
+	expect(typeof(usersAdmin)).toBe('object');
+})

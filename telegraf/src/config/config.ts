@@ -26,7 +26,7 @@ export function getConfig(name: string): ConfigT {
 
 export function parserAdmins (obj: object) {
 	const users_Admin = <AdminsT>obj; 
-	const adminsuser : any = users_Admin.admin_users.id_users;
+	const adminsuser : string = users_Admin.admin_users.id_users;
 	let temp = adminsuser.split(', ');
 	let Admins = [];
 	for(let i = 0; i < temp.length; i++ ){

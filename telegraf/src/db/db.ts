@@ -14,7 +14,7 @@ export async function initializeDB() {
 		date INTEGER
 		);`
 	);
-
+	// console.log('sql: --', typeof(sqlite.connect('statistic.db')));
 	return (typeof(sqlite.connect('statistic.db')));
 }
 

@@ -1,7 +1,6 @@
 import Telegraf, { ContextMessageUpdate } from 'telegraf';
-import { getConfig, getAdmin, BotConfigT, ConfigT } from '../config';
-import {  } from '../config';
-import { initializeDB, getDB, setDB } from '../db';
+import { getAdmin, BotConfigT, ConfigT } from '../config';
+import { getDB, setDB } from '../db';
 import { messageOptions, statisticOptions, errorOptions } from './optionsButton';
 
 export const Admins = getAdmin('admin_data_'); 
@@ -19,8 +18,8 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 	Bot.command('setting', (ctx) => {
 		let messages : any;
 		messages = ctx.message;
+		ctx.deleteMessage();
 		if (Admins.indexOf(messages.from.id) >= 0) {
-			ctx.deleteMessage();
 			let text = `/setting - вызов данного меню;`;
 			Bot.telegram.sendMessage(messages.from.id, text, messageOptions );
 		}
@@ -28,7 +27,6 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 	Bot.on('callback_query', (ctx) => {
 		let update: any = ctx.update;
 		// console.log('temp: ', ctx.from.id);
-		let user_id : any;
 		let callback_query_data = update.callback_query.data;
 		// console.log(callback_query_data);
 		// ctx.reply('txt mesage!');

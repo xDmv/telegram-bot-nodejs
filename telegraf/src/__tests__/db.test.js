@@ -2,7 +2,7 @@ const db = require('../../dist/db')
 
 test('Test conect DB', () => {
 	let confg = db.initializeDB();
-	expect(confg).toBe('object'); 
+	expect(confg).toBe("object"); 
 });
 
 test('Test get data DB', () => {
