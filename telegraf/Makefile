@@ -21,6 +21,7 @@ help:
 	@echo '  $(GREEN)build   $(RESET) - builds new bot'
 	@echo '  $(GREEN)clear   $(RED) - очистка папки созданного кода'
 	@echo '  $(GREEN)start   $(RESET) - start bot, not watch'
+	@echo '  $(GREEN)init    $(RESET) - init npm package'
 
 dev-test: build test
 
@@ -49,44 +50,10 @@ ifndef Build
 	@npm run build
 endif
 
-# build-%: ENVIRONMENT=$(subst build-,,$@)
-# build-%: dep ionic platform
-# 	$(if ${BUILD_OPT},, $(error $(RED)Build environment ${ENVIRONMENT} is not defined$(RESET) ) )
-# 	@echo "$(GREEN)Build: ${ENVIRONMENT}$(RESET)..."
-# 	@cd $(APP_PATH) && ionic build $(BUILD_OPT)
-
-# serve: dep ionic
-# 	@echo '$(GREEN)Serve$(RESET)...'
-# 	@cd $(APP_PATH) && ionic serve --no-open
-
-# dep: dir
-# 	@cd $(APP_PATH) && \
-# 	if ! [ -d 'node_modules' ]; then \
-# 		echo "$(GREEN)Dependencies$(RESET)..."; \
-# 		npm install; \
-# 	fi
-
-# platform: dir ionic
-# 	@echo '$(GREEN)Platform$(RESET)...'
-# 	@cd $(APP_PATH) && \
-# 	ionic cordova platform add ios
-
-# ### create/remove angular sketch
-
-# remove: dir confirm
-# 	@echo "$(GREEN)Remove app folder: '$(APP_PATH)'$(RESET)..."
-# 	@rm -rf $(APP_PATH)
-
-# new: ionic
-# 	$(if $(APP_EXIST), $(error $(RED)App path '$(APP_PATH)' is $(APP_EXIST) already exists$(RESET) ) )
-# 	@echo "$(GREEN)New $(APP_EXIST)$(RESET)..."
-# 	@ionic start $(APP_NAME) blank --condova --no-git --no-deps --no-link --display-name '$(APP_NAME)' && \
-# 	mv $(APP_NAME) $(APP_PATH)
-
-# dir:
-# 	$(if $(APP_EXIST),, $(error $(RED)App path '$(APP_PATH)' is not exists$(RESET) ) )
-
-### helpers
+init: 
+ifndef Build
+	@npm i
+endif
 
 confirm:
 	$(if $(shell read -p "Are you sure $(RED)Yes$(RESET)/$(GREEN)No$(RESET)? " && shopt -s nocasematch && [[ "$$REPLY" =~ "yes" ]] && echo 'yes' ),, $(error $(RED)No$(RESET). ) )
