@@ -19,7 +19,12 @@ export async function initializeTlgfBot(Bot: TelegrafBotT, config: ConfigT) {
 		let messages : any;
 		messages = ctx.message;
 		ctx.deleteMessage();
-		if (Admins.indexOf(messages.from.id) >= 0) {
+		console.log('messages.from.id: ', messages.from.id)
+		console.log('Admins: ', Admins[1]);
+		if (Admins[0] === messages.from.id ||
+			Admins[1] === messages.from.id ||
+			Admins[2] === messages.from.id
+		) {
 			let text = `/setting - вызов данного меню;`;
 			Bot.telegram.sendMessage(messages.from.id, text, messageOptions );
 		}
